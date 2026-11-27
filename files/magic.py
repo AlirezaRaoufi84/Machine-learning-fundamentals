@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import RandomOverSampler
 
 columes = [
     "fLength",
@@ -51,10 +52,13 @@ train, temp = train_test_split(df, test_size=0.4, random_state=42)
 valid, test = train_test_split(temp, test_size=0.5, random_state=42)
 
 
-def scale_dataset(df):
-    x = df[df[:-1]].values
-    y = df[df[-1]].values
+def scale_dataset(df, over_sample=False):
+    x = df[df.columns[:-1]].values
+    y = df[df.columns[-1]].values
 
+    if over_sample:
+        ros = RandomOverSampler()
+        x, y = ros.fit_resample(x, y)
     scaler = StandardScaler()
     x = scaler.fit_transform(x)
 
@@ -62,5 +66,10 @@ def scale_dataset(df):
     return x, y, data
 
 
-print(len(train[train["class"] == 1]))  # gammas
-print(len(train[train["class"] == 0]))  # hadron
+print(len(train[train["class"] == 1]))  # gammas 7396
+print(len(train[train["class"] == 0]))  # hadron 4016
+
+x_train, y_train, train = scale_dataset(train, over_sample=True)
+
+sum(y_train == 1)  # 7396
+sum(y_train == 0)  # 7396
