@@ -66,10 +66,16 @@ def scale_dataset(df, over_sample=False):
     return x, y, data
 
 
+# before scale
 print(len(train[train["class"] == 1]))  # gammas 7396
 print(len(train[train["class"] == 0]))  # hadron 4016
 
 x_train, y_train, train = scale_dataset(train, over_sample=True)
+x_valid, y_valid, valid = scale_dataset(valid, over_sample=False)
+x_test, y_test, test = scale_dataset(test, over_sample=False)
 
+# after scale
 sum(y_train == 1)  # 7396
 sum(y_train == 0)  # 7396
+
+# Data is now completely formatted and we are now ready to train the model.
