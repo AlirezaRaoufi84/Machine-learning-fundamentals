@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
 columes = [
     "fLength",
@@ -41,3 +43,24 @@ for label in columes[:-1]:
     plt.xlabel(label)
     plt.legend()
     plt.show()
+
+# train, validation, testing data
+
+
+train, temp = train_test_split(df, test_size=0.4, random_state=42)
+valid, test = train_test_split(temp, test_size=0.5, random_state=42)
+
+
+def scale_dataset(df):
+    x = df[df[:-1]].values
+    y = df[df[-1]].values
+
+    scaler = StandardScaler()
+    x = scaler.fit_transform(x)
+
+    data = np.hstack((x, np.reshape(y, (-1, 1))))
+    return x, y, data
+
+
+print(len(train[train["class"] == 1]))  # gammas
+print(len(train[train["class"] == 0]))  # hadron
